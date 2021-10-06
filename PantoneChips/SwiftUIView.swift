@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  SwiftUIView.swift
 //  PantoneChips
 //
 //  Created by 이영빈 on 2021/10/06.
@@ -7,28 +7,27 @@
 
 import SwiftUI
 
-
-//50 30 87
 struct ContentView: View {
     var body: some View {
         VStack {
-            PantoneChips(red: 50, green: 30, blue: 87)
+            PantoneStyleColorChips(red: 50, green: 30, blue: 87)
                 .zIndex(1)
-            PantoneChips(red: 226, green: 77, blue: 108)
+            PantoneStyleColorChips(red: 226, green: 77, blue: 108)
                 .zIndex(0.5)
                 .offset(y: -35)
-            PantoneChips(red: 90, green: 105, blue: 56)
+            PantoneStyleColorChips(red: 90, green: 105, blue: 56)
                 .zIndex(0)
                 .offset(y: -35*2)
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct SwiftUIView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
+
 
 struct Colorchip: View {
     let name: String
@@ -72,35 +71,40 @@ struct Colorchip: View {
     }
 }
 
-struct PantoneChips: View {
+struct PantoneStyleColorChips: View {
     var chipShapes: [Colorchip]
     let zIndexPreset: [Double]
     
     init(red: Int, green: Int, blue: Int) {
         chipShapes = [Colorchip]()
+        
         for i in (0..<32) {
-            self.chipShapes.append(Colorchip(name: String(format: "%d.%d.%d", red + i, green + i*2, blue + i), color: Color(red: Double(red + i) / 255.0, green: Double(green + i*2)/255.0, blue: Double(blue + i)/255.0), scale: 2))
+            self.chipShapes.append(
+                Colorchip(name: String(format: "%d.%d.%d", red + i, green + i*2, blue + i),
+                          color: Color(red: Double(red + i) / 255.0, green: Double(green + i*2)/255.0, blue: Double(blue + i)/255.0),
+                          scale: 2)
+            )
         }
         
         self.zIndexPreset = (1...self.chipShapes.count).map({ value in Double(value) / Double(360) }).reversed()
     }
     
-    @State var delta: Double = 0
+    @State var delta: Double = 0 // Change in angle
     @State var currentAngle: Double = 0
-    @State var currentCard: Int = 0
+    @State var currentCard: Int = 0 // Currently selected card
     @State var isDragging = false
-    @State var color = Color.white
     
     var body: some View {
-        let unit: Double = 360 / Double(chipShapes.count)
-        
         let dragGesture = DragGesture()
             .onChanged{ val in
                 isDragging = true
                 delta = val.translation.width
                 
-                let tempCurrentCard = -Int(round((currentAngle + delta) / unit)) % chipShapes.count
+                // Calculate the cards corresponding to the current location
+                // CurrentCard = -round(Current angle(360 ~ -360) / Unit angle).
+                let tempCurrentCard = -Int(round(Double(currentAngle + delta) / Double(360 / chipShapes.count))) % chipShapes.count
                 
+                // If CurrentCard is negative, make it positive.
                 withAnimation(.easeInOut(duration: 0.1)) {
                     if tempCurrentCard < 0 {
                         currentCard = tempCurrentCard + chipShapes.count
@@ -109,23 +113,30 @@ struct PantoneChips: View {
                     }
                 }
             }
-            .onEnded { _ in
+            .onEnded { val in
                 isDragging = false
                 currentAngle += delta
-                currentAngle = Double((Int(currentAngle) % 360))
+                currentAngle = Double((Int(currentAngle) % 360)) // Make currentAngle between -360` ~ 360`
             }
         
         
         ZStack {
+            // You can add offset if the cards pop out too early
+            let angleOffset: Double = -30
+
             ForEach(0 ..< chipShapes.count) { index in
-                let relativePosition =
+                // Caculate absolute index relative to 0 degree
+                let relativeIndex =
                 index - currentCard < 0 ? (index - currentCard + chipShapes.count) : (index - currentCard)
                 
-                let correctdRPosition = relativePosition + 5 >= chipShapes.count ? relativePosition + 5 - chipShapes.count : relativePosition + 5
+                // relativeIndex still can't solve problem.
+                // Because the frontmost card has an relativeIndex greater than 0, it is eventually covered by card at 0.
+                // correctdRelativeIndex is created to solve the problem
+                let correctdRelativeIndex = relativeIndex + chipShapes.count/2 >= chipShapes.count ? relativeIndex + chipShapes.count/2 - chipShapes.count : relativeIndex + chipShapes.count/2
                 
                 ZStack(alignment: .top) {
                     chipShapes[index]
-                        .offset(y: currentCard == index ? 120 : 0)
+                        .offset(y: currentCard == index ? 100 : 0) // To pop out
                     
                     ZStack(alignment: .bottomTrailing) {
                         VStack(spacing: 0) {
@@ -141,29 +152,18 @@ struct PantoneChips: View {
                     .zIndex(1)
                 }
                 .rotationEffect(.degrees(-90))
-                .onTapGesture {
-                    if currentCard == index {
-                        withAnimation(.easeIn(duration: 1)){
-                            color = chipShapes[index].color
-                        }
-                    } else { }
-                }
                 .rotation3DEffect(
-                    .degrees(
-                        (unit * Double(index) - 30 +
-                         (isDragging ? currentAngle + delta : currentAngle))),
+                    .degrees(  // 
+                        angleOffset + (Double(360 / chipShapes.count) * Double(index) +
+                                       (isDragging ? currentAngle + delta : currentAngle))),
                     axis: (x: 0, y: 1, z: 0),
                     anchor: UnitPoint(x: -2, y: -1.5),
                     perspective: 0.1)
-                .zIndex(zIndexPreset[correctdRPosition])
+                .zIndex(zIndexPreset[correctdRelativeIndex])
             }
             .shadow(radius: 5, x: 5, y: 0)
+            .offset(x: -100) // To prevent the cards from being cut when it pops out
             .gesture(dragGesture)
-            .offset(x: -100)
         }
     }
 }
-
-
-
-

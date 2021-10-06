@@ -8,17 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		9B11002C270D20EE001649A4 /* PantoneChipsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B11002B270D20EE001649A4 /* PantoneChipsApp.swift */; };
-		9B11002E270D20EE001649A4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B11002D270D20EE001649A4 /* ContentView.swift */; };
 		9B110030270D20EF001649A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B11002F270D20EF001649A4 /* Assets.xcassets */; };
 		9B110033270D20EF001649A4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B110032270D20EF001649A4 /* Preview Assets.xcassets */; };
+		9B11003A270D5D55001649A4 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B110039270D5D55001649A4 /* SwiftUIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9B110028270D20EE001649A4 /* PantoneChips.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PantoneChips.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B11002B270D20EE001649A4 /* PantoneChipsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PantoneChipsApp.swift; sourceTree = "<group>"; };
-		9B11002D270D20EE001649A4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9B11002F270D20EF001649A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B110032270D20EF001649A4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9B110039270D5D55001649A4 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				9B11002B270D20EE001649A4 /* PantoneChipsApp.swift */,
-				9B11002D270D20EE001649A4 /* ContentView.swift */,
+				9B110039270D5D55001649A4 /* SwiftUIView.swift */,
 				9B11002F270D20EF001649A4 /* Assets.xcassets */,
 				9B110031270D20EF001649A4 /* Preview Content */,
 			);
@@ -137,8 +137,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B11002E270D20EE001649A4 /* ContentView.swift in Sources */,
 				9B11002C270D20EE001649A4 /* PantoneChipsApp.swift in Sources */,
+				9B11003A270D5D55001649A4 /* SwiftUIView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
